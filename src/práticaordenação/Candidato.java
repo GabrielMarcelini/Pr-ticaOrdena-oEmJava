@@ -8,43 +8,55 @@ package práticaordenação;
  *
  * @author Gabriel
  */
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class Candidato implements Comparable<Candidato> {
     private int identificador;
     private String nome;
-    private LocalDate dataNascimento;
+    private Date dataNascimento;
     private int nota;
-
+    
     public Candidato(int identificador, String nome, String dataNascimento, int nota) {
         this.identificador = identificador;
         this.nome = nome;
-        this.dataNascimento = LocalDate.parse(dataNascimento, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         this.nota = nota;
+        try {
+            this.dataNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(dataNascimento);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getNota() {
         return nota;
     }
 
-    public LocalDate getDataNascimento() {
+    public Date getDataNascimento() {
         return dataNascimento;
     }
 
     @Override
     public int compareTo(Candidato outro) {
-        
-        if (this.nota != outro.nota) {
-            return Integer.compare(outro.nota, this.nota);
+        // Primeiro comparar pela nota (em ordem decrescente)
+        int notaComparison = Integer.compare(outro.getNota(), this.getNota());
+        if (notaComparison != 0) {
+            return notaComparison;
         }
-        
-        return this.dataNascimento.compareTo(outro.dataNascimento);
+        // Se as notas forem iguais, comparar pela idade (data de nascimento)
+        return this.getDataNascimento().compareTo(outro.getDataNascimento());
     }
 
     @Override
     public String toString() {
-        return String.format("ID: %d, Nome: %s, Data Nasc: %s, Nota: %d", 
-                identificador, nome, dataNascimento, nota);
+        return "Candidato{" +
+                "identificador=" + identificador +
+                ", nome='" + nome + '\'' +
+                ", dataNascimento=" + new SimpleDateFormat("dd/MM/yyyy").format(dataNascimento) +
+                ", nota=" + nota +
+                '}';
     }
 }

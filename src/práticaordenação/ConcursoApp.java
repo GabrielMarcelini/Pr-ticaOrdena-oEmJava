@@ -12,20 +12,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ConcursoApp {
     public static void main(String[] args) {
-        String arquivoCSV = "dadosConcurso.csv";
+        String arquivoCSV = "dadosConcurso.csv"; // Nome do arquivo CSV com os dados
         List<Candidato> candidatos = new ArrayList<>();
 
-        
+        // Carregar os dados do CSV
         try (BufferedReader br = new BufferedReader(new FileReader(arquivoCSV))) {
             String linha;
-            br.readLine(); 
+            br.readLine();
             while ((linha = br.readLine()) != null) {
-                String[] dados = linha.split(","); 
+                String[] dados = linha.split(",");
                 int identificador = Integer.parseInt(dados[0]);
                 String nome = dados[1];
                 String dataNascimento = dados[2];
@@ -37,11 +36,14 @@ public class ConcursoApp {
             System.err.println("Erro ao ler o arquivo: " + e.getMessage());
         }
 
-        
-        Collections.sort(candidatos);
+        // Converter List para Array para usar o InsertionSort
+        Candidato[] arrayCandidatos = candidatos.toArray(new Candidato[0]);
 
-        
-        for (Candidato c : candidatos) {
+        // Criar instância do InsertionSort e ordenar
+        InsertionSort<Candidato> sorter = new InsertionSort<>();
+        sorter.sort(arrayCandidatos);
+
+        for (Candidato c : arrayCandidatos) {
             System.out.println(c);
         }
     }
